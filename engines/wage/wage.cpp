@@ -290,7 +290,7 @@ void WageEngine::aboutDialog() {
 }
 
 void WageEngine::saveGame() {
-	warning("STUB: saveGame()");
+	scummVMSaveLoadDialog(true);
 }
 
 void WageEngine::performInitialSetup() {
