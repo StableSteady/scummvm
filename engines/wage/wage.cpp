@@ -218,6 +218,29 @@ void WageEngine::appendText(const char *str) {
 	_inputText.clear();
 }
 
+void WageEngine::doNew() {
+	_aim = -1;
+	_opponentAim = -1;
+	_temporarilyHidden = false;
+	_isGameOver = false;
+	_monster = NULL;
+	_running = NULL;
+	_lastScene = NULL;
+
+	_loopCount = 0;
+	_turn = 0;
+
+	_commandWasQuick = false;
+
+	_shouldQuit = false;
+	_temporarilyHidden = true;
+	performInitialSetup();
+	_gui->_consoleWindow->clearText();
+	Common::String input("look");
+	processTurn(&input, NULL);
+	_temporarilyHidden = false;
+}
+
 void WageEngine::gameOver() {
 	Graphics::MacDialogButtonArray buttons;
 

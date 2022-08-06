@@ -267,6 +267,8 @@ void Gui::executeMenuCommand(int action, Common::String &text) {
 		_engine->aboutDialog();
 		break;
 	case kMenuActionNew:
+		_engine->doNew();
+		break;
 	case kMenuActionClose:
 	case kMenuActionRevert:
 		warning("STUB: executeMenuCommand: action: %d", action);
