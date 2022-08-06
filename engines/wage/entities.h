@@ -261,8 +261,11 @@ public:
 	int _resourceId;
 	bool _namePlural;
 	uint _value;
+	uint _baseValue;
 	int _attackType;
+	int _baseAttackType;
 	int _numberOfUses;
+	int _baseNumberOfUses;
 	bool _returnToRandomScene;
 	Common::String _sceneOrOwner;
 	Common::String _clickMessage;
@@ -273,9 +276,12 @@ public:
 	Chr *_currentOwner;
 
 	int _type;
+	int _baseType;
 	uint _accuracy;
+	uint _baseAccuracy;
 	Common::String _operativeVerb;
 	int _damage;
+	int _baseDamage;
 	Common::String _sound;
 
 public:

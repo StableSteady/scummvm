@@ -213,12 +213,12 @@ Obj::Obj(Common::String name, Common::SeekableReadStream *data, int resourceId) 
 	if (data->readByte() != 0)
 		error("Obj <%s> had byte set", name.c_str());
 
-	_accuracy = data->readByte();
-	_value = data->readByte();
-	_type = data->readSByte();
-	_damage = data->readByte();
-	_attackType = data->readSByte();
-	_numberOfUses = data->readSint16BE();
+	_baseAccuracy = _accuracy = data->readByte();
+	_baseValue = _value = data->readByte();
+	_baseType = _type = data->readSByte();
+	_baseDamage = _damage = data->readByte();
+	_baseAttackType = _attackType = data->readSByte();
+	_baseNumberOfUses = _numberOfUses = data->readSint16BE();
 	int16 returnTo = data->readSint16BE();
 	if (returnTo == 256) // TODO any other possibilities?
 		_returnToRandomScene = true;
@@ -268,7 +268,14 @@ Designed *Obj::removeFromCharOrScene() {
 }
 
 void Obj::resetState(Chr *owner, Scene *scene) {
-	warning("STUB: Obj::resetState()");
+	_accuracy = _baseAccuracy;
+	_value = _baseValue;
+	_type = _baseType;
+	_damage = _baseDamage;
+	_attackType = _baseAttackType;
+	_numberOfUses = _baseNumberOfUses;
+	_currentOwner = owner;
+	_currentScene = scene;
 }
 
 Chr::Chr(Common::String name, Common::SeekableReadStream *data) {
