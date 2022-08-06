@@ -362,7 +362,7 @@ void WageEngine::wearObjs(Chr* chr) {
 }
 
 void WageEngine::doClose() {
-	warning("STUB: doClose()");
+	_shouldQuit = true;
 }
 
 Scene *WageEngine::getSceneByName(Common::String &location) {
