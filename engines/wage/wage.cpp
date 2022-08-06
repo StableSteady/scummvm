@@ -235,8 +235,6 @@ void WageEngine::gameOver() {
 	if (button == Graphics::kMacDialogQuitRequested)
 		_shouldQuit = true;
 
-	doClose();
-
 	_gui->disableAllMenus();
 	_gui->enableNewGameMenus();
 }
