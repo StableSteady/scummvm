@@ -253,6 +253,7 @@ void WageEngine::doNew() {
 
 	performInitialSetup();
 	_gui->_consoleWindow->clearText();
+	_gui->enableAllMenus();
 	Common::String input("look");
 	processTurn(&input, NULL);
 	_temporarilyHidden = false;

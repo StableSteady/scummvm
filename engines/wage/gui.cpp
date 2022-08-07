@@ -398,6 +398,10 @@ void Gui::disableAllMenus() {
 	_menu->disableAllMenus();
 }
 
+void Gui::enableAllMenus() {
+	_menu->enableAllMenus();
+}
+
 void Gui::enableNewGameMenus() {
 	_menu->enableCommand(kMenuFile, kMenuActionNew, true);
 	_menu->enableCommand(kMenuFile, kMenuActionOpen, true);

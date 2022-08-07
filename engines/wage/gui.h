@@ -135,6 +135,7 @@ public:
 	void actionCut();
 	void disableUndo();
 	void disableAllMenus();
+	void enableAllMenus();
 	void enableNewGameMenus();
 
 	bool processSceneEvents(WindowClick click, Common::Event &event);
