@@ -60,6 +60,7 @@
 #include "wage/entities.h"
 #include "wage/gui.h"
 #include "wage/script.h"
+#include "wage/sound.h"
 #include "wage/world.h"
 
 namespace Wage {
@@ -94,6 +95,10 @@ WageEngine::WageEngine(OSystem *syst, const ADGameDescription *desc) : Engine(sy
 WageEngine::~WageEngine() {
 	debug("WageEngine::~WageEngine()");
 
+	for (uint i = 0; i < _soundQueue.size(); ++i) {
+		delete _soundQueue[i];
+	}
+
 	delete _world;
 	delete _resManager;
 	delete _gui;
@@ -102,7 +107,11 @@ WageEngine::~WageEngine() {
 
 bool WageEngine::pollEvent(Common::Event &event) {
 	return _eventMan->pollEvent(event);
-} 
+}
+
+void playSoundCallback(void *refCon) {
+	((WageEngine *)refCon)->playSound();
+}
 
 Common::Error WageEngine::run() {
 	debug("WageEngine::init");
@@ -150,6 +159,8 @@ Common::Error WageEngine::run() {
 	Common::String input("look");
 	processTurn(&input, NULL);
 	_temporarilyHidden = false;
+
+	getTimerManager()->installTimerProc(&playSoundCallback, 1000000, this, "playSoundCallback");
 
 	while (!_shouldQuit) {
 		processEvents();
@@ -234,6 +245,12 @@ void WageEngine::doNew() {
 
 	_shouldQuit = false;
 	_temporarilyHidden = true;
+
+	for (uint i = 0; i < _soundQueue.size(); ++i) {
+		delete _soundQueue[i];
+	}
+	_soundQueue.clear();
+
 	performInitialSetup();
 	_gui->_consoleWindow->clearText();
 	Common::String input("look");

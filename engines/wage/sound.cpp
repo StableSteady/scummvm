@@ -49,6 +49,7 @@
 #include "audio/decoders/raw.h"
 #include "common/stream.h"
 #include "common/system.h"
+#include "common/timer.h"
 
 #include "wage/wage.h"
 #include "wage/entities.h"
@@ -79,6 +80,17 @@ Sound::~Sound() {
 	free(_data);
 }
 
+void WageEngine::playSound() {
+	for (uint i = 0; i < _soundQueue.size(); ++i) {
+		--(_soundQueue[i]->_time);
+		if (_soundQueue[i]->_time > 0)
+			continue;
+		if (_world->_player->_currentScene->_name == _soundQueue[i]->_scene->_name)
+			playSound(_soundQueue[i]->_sound);
+		delete _soundQueue.remove_at(i);
+	}
+}
+
 void WageEngine::playSound(Common::String soundName) {
 	soundName.toLowercase();
 
@@ -92,7 +104,7 @@ void WageEngine::playSound(Common::String soundName) {
 	Audio::AudioStream *stream = Audio::makeRawStream(s->_data, s->_size, 11000, Audio::FLAG_UNSIGNED);
 
 	_mixer->playStream(Audio::Mixer::kPlainSoundType, &_soundHandle, stream,
-		-1, Audio::Mixer::kMaxChannelVolume, 0, DisposeAfterUse::NO);
+					   -1, Audio::Mixer::kMaxChannelVolume, 0, DisposeAfterUse::NO);
 
 	while (_mixer->isSoundHandleActive(_soundHandle) && !_shouldQuit) {
 		Common::Event event;
@@ -114,7 +126,6 @@ void WageEngine::playSound(Common::String soundName) {
 }
 
 void WageEngine::updateSoundTimerForScene(Scene *scene, bool firstTime) {
-	//warning("STUB: WageEngine::updateSoundTimerForScene()");
 	if (_world->_player->_currentScene != scene)
 			return;
 
@@ -128,28 +139,26 @@ void WageEngine::updateSoundTimerForScene(Scene *scene, bool firstTime) {
 			return;
 		}
 
-		warning("STUB: updateSoundTimerForScene: sound: '%s', %s", soundName.c_str(),
-				scene->_soundType == Scene::PERIODIC ? "PERIODIC" : "RANDOM");
-
-#if 0
-		soundTimer = new Timer();
-		switch (scene.getSoundType()) {
-		case Scene.PERIODIC:
-			if (firstTime)
-				soundTimer.schedule(new PlaySoundTask(scene, sound), 0);
-			int delay = 60000 / scene.getSoundFrequency();
-			soundTimer.schedule(new PlaySoundTask(scene, sound), delay);
-			soundTimer.schedule(new UpdateSoundTimerTask(scene), delay + 1);
-			break;
-		case Scene.RANDOM:
-			for (int i = 0; i < scene.getSoundFrequency(); i++)
-				soundTimer.schedule(new PlaySoundTask(scene, sound), (int)(Math.random() * 60000));
-			soundTimer.schedule(new UpdateSoundTimerTask(scene), 60000);
+		SoundData *soundData = nullptr; 
+		switch (_world->_player->_currentScene->_soundType) {
+		case Scene::SceneTypes::PERIODIC: {
+			if (firstTime) {
+				soundData = new SoundData(soundName, scene, 0);
+				_soundQueue.push_back(soundData);
+			}
+			int delay = 60 / scene->_soundFrequency;
+			soundData = new SoundData(soundName, scene, delay);
+			_soundQueue.push_back(soundData);
 			break;
 		}
-#endif
+		case Scene::SceneTypes::RANDOM:
+			for (int i = 0; i < scene->_soundFrequency; i++) {
+				soundData = new SoundData(soundName, scene, _rnd->getRandomNumber(60));
+				_soundQueue.push_back(soundData);
+			}
+			break;
+		}
 	}
-
 }
 
 

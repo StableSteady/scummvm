@@ -59,6 +59,13 @@ public:
 	byte *_data;
 };
 
+struct SoundData {
+	Common::String _sound;
+	Scene *_scene;
+	int _time;
+	SoundData(Common::String sound, Scene *scene, int time) : _sound(sound), _scene(scene), _time(time) {}
+};
+
 } // End of namespace Wage
 
 #endif

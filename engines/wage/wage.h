@@ -60,7 +60,7 @@
 struct ADGameDescription;
 
 namespace Common {
-class Event;
+struct Event;
 }
 
 namespace Graphics {
@@ -76,6 +76,7 @@ class Dialog;
 class Gui;
 class Obj;
 class Scene;
+struct SoundData;
 class World;
 
 typedef Common::Array<Obj *> ObjArray;
@@ -209,6 +210,9 @@ public:
 
 	Common::String _inputText;
 
+	Common::Array<SoundData *> _soundQueue;
+
+	void playSound();
 	void playSound(Common::String soundName);
 	void setMenu(Common::String soundName);
 	void appendText(const char *str);
